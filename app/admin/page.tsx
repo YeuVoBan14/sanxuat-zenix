@@ -9,7 +9,7 @@ async function page() {
   if (token) {
     response = await getUserFunctions({ token });
   }
-  return <Home data={response?.data?.data} />;
+  return <Home />;
 }
 
 export default page;
