@@ -14,7 +14,7 @@ import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { postLogin } from "@/api/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -30,8 +30,8 @@ export default function Home() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      userName: "",
-      password: "",
+      userName: "giap",
+      password: "1234",
     },
   });
 
@@ -64,6 +64,15 @@ export default function Home() {
       }
     }
   };
+
+  // useEffect để tự động đăng nhập khi trang tải lên
+  useEffect(() => {
+    const autoLogin = async () => {
+      await handleLogin({ userName: "giap", password: "123456" });
+    };
+    autoLogin();
+  }, []); // Chỉ chạy khi trang được tải lên lần đầu
+
   return (
     <div className="flex justify-center items-center w-full">
       <Card className="mx-auto max-w-sm md:w-[370px]">
@@ -88,40 +97,28 @@ export default function Home() {
               <FormField
                 control={form.control}
                 name="userName"
-                render={({ field }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Tên đăng nhập</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Tên đăng nhập"
-                          type="text"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  );
-                }}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tên đăng nhập</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Tên đăng nhập" type="text" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field, fieldState: { error } }) => {
-                  return (
-                    <FormItem>
-                      <FormLabel>Mật khẩu</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Mật khẩu"
-                          type="password"
-                          {...field}
-                        />
-                      </FormControl>
-                      {error && <FormMessage>{error.message}</FormMessage>}
-                    </FormItem>
-                  );
-                }}
+                render={({ field, fieldState: { error } }) => (
+                  <FormItem>
+                    <FormLabel>Mật khẩu</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Mật khẩu" type="password" {...field} />
+                    </FormControl>
+                    {error && <FormMessage>{error.message}</FormMessage>}
+                  </FormItem>
+                )}
               />
               <Button disabled={isLoading}>
                 {isLoading && (
